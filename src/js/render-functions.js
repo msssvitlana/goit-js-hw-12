@@ -1,57 +1,71 @@
-import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-export { createGallery, clearGallery, showLoader, hideLoader, refreshLightbox };
-
 const galleryContainer = document.querySelector('.gallery');
-const loader = document.querySelector('#loader');
+const loadMoreBtn = document.querySelector('.load-more');
+const loader = document.querySelector('.loader');
 
-const lightbox = new SimpleLightbox('.gallery a');
+let lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
-function createGallery(images) {
-  return images
+export function createGallery(images) {
+  const markup = images
     .map(
       ({
         webformatURL,
-        tags,
         largeImageURL,
+        tags,
         likes,
         views,
         comments,
         downloads,
-      }) => `
-        <li class="gallery-item">
-        <div class='photo-container'>
-          <a href="${largeImageURL}">
-            <img src="${webformatURL}" alt="${tags} width='360'" />
-          </a>
-          <div class="image-info">
-            <p class="image-info-text"><strong>Likes</strong> ${likes}</p>
-            <p class="image-info-text"><strong>Views</strong> ${views}</p>
-            <p class="image-info-text"><strong>Comments</strong> ${comments}</p>
-            <p class="image-info-text"><strong>Downloads</strong> ${downloads}</p>
-          </div>
-        </li>
-        
-        </div>`
+      }) =>
+        `
+    <a class="gallery-item" href="${largeImageURL}">
+      <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+   <div class="image-info">
+        <div class="info-labels">
+          <div>Likes</div>
+          <div>Views</div>
+          <div>Comments</div>
+          <div>Downloads</div>
+        </div>
+        <div class="info-values">
+          <div>${likes}</div>
+          <div>${views}</div>
+          <div>${comments}</div>
+          <div>${downloads}</div>
+        </div>
+      </div>
+    </a>
+  `
     )
     .join('');
+  galleryContainer.insertAdjacentHTML('beforeend', markup);
+  lightbox.refresh();
 }
 
-function clearGallery() {
+export function clearGallery() {
   galleryContainer.innerHTML = '';
 }
 
-function showLoader() {
-  loader.classList.remove('visually-hidden');
-  console.log('showLoader');
+export function showLoader() {
+  loader.classList.remove('hidden');
 }
 
-function hideLoader() {
-  loader.classList.add('visually-hidden');
-  console.log('hideLoader');
+export function hideLoader() {
+  loader.classList.add('hidden');
 }
-function refreshLightbox() {
-  lightbox.refresh();
+export function showLoadMoreButton() {
+  if (loadMoreBtn) {
+    loadMoreBtn.classList.remove('hidden');
+  }
+}
+
+export function hideLoadMoreButton() {
+  if (loadMoreBtn) {
+    loadMoreBtn.classList.add('hidden');
+  }
 }

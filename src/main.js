@@ -76,8 +76,7 @@ async function handleSubmit(event) {
 
 async function handleLoadMore() {
   hideLoadMoreButton();
-  showLoader();
-  console.log('loader: s', showLoader);
+  showLoader(); // ✅
 
   try {
     currentPage += 1;
@@ -88,7 +87,6 @@ async function handleLoadMore() {
     if (currentPage < totalPages) {
       showLoadMoreButton();
     } else {
-      hideLoadMoreButton();
       iziToast.info({
         title: 'End',
         message: "You've reached the end of search results.",
@@ -99,6 +97,7 @@ async function handleLoadMore() {
     const cardHeight = document
       .querySelector('.gallery-item')
       .getBoundingClientRect().height;
+
     window.scrollBy({
       top: cardHeight * 2,
       behavior: 'smooth',
